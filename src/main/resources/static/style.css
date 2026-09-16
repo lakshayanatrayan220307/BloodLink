@@ -1,0 +1,3632 @@
+/* =========================================================
+   BloodLink — Emergency Blood Donor System
+   Theme: mild-bright, professional dashboard
+   ========================================================= */
+
+:root{
+  /* Core palette (mild bright, not neon) */
+  --red: #EF4B5D;          /* primary / emergency */
+  --red-dark: #D63A4C;
+  --red-tint: #FDEBEE;
+
+  --blue: #3E8BFF;         /* secondary / info */
+  --blue-tint: #EAF2FF;
+
+  --teal: #14B8A6;         /* success / available */
+  --teal-tint: #E6FAF7;
+
+  --amber: #F5A623;        /* warning / medium urgency */
+  --amber-tint: #FEF3E2;
+
+  --violet: #8B5CF6;       /* donors accent */
+  --violet-tint: #F1EBFE;
+
+  --ink: #1F2430;
+  --ink-soft: #626A7A;
+  --ink-faint: #97A0B0;
+
+  --bg: #F4F6FA;
+  --surface: #FFFFFF;
+  --line: #E6E9F0;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow-sm: 0 1px 2px rgba(31,36,48,0.05), 0 2px 8px rgba(31,36,48,0.04);
+  --shadow-md: 0 4px 16px rgba(31,36,48,0.08);
+
+  --font: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html, body{
+  margin:0;
+  padding:0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+}
+
+button, input, select{ font-family: inherit; }
+
+h1, h2, h3{ margin:0; }
+
+/* ============ TOP NAV ============ */
+.topnav{
+  position: sticky;
+  top:0;
+  z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.topnav-inner{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display:flex;
+  align-items:center;
+  gap: 28px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:700;
+  font-size:18px;
+  color: var(--ink);
+  margin-right: auto;
+}
+.brand-icon{ font-size:20px; }
+
+.topnav-links{
+  display:flex;
+  gap:4px;
+}
+.nav-link{
+  border:none;
+  background:transparent;
+  color: var(--ink-soft);
+  font-size:14px;
+  font-weight:600;
+  padding:8px 14px;
+  border-radius: 999px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+  transition: background .15s ease, color .15s ease;
+}
+.nav-link:hover{ background: var(--bg); color: var(--ink); }
+.nav-link.active{ background: var(--red-tint); color: var(--red-dark); }
+
+.topnav-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  color: var(--ink-faint);
+  white-space:nowrap;
+}
+.status-dot{
+  width:8px; height:8px;
+  border-radius:50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 3px var(--amber-tint);
+}
+.status-dot.live{ background: var(--teal); box-shadow: 0 0 0 3px var(--teal-tint); }
+.status-dot.error{ background: var(--red); box-shadow: 0 0 0 3px var(--red-tint); }
+
+/* ============ TABBED SECTIONS ============ */
+.page-section{
+  display: none;
+}
+.page-section.active{
+  display: block;
+}
+
+/* ============ PAGE LAYOUT ============ */
+.page{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 70px;
+}
+
+/* ============ HERO ============ */
+.hero{
+  margin-bottom: 26px;
+}
+.hero h1{
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.hero p{
+  margin: 6px 0 0;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+}
+
+/* ============ STAT CARDS ============ */
+.stats-row{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:16px;
+  margin-bottom: 24px;
+}
+.stat-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-icon{
+  width:44px; height:44px;
+  border-radius: 12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.stat-units .stat-icon{ background: var(--red-tint); }
+.stat-donors .stat-icon{ background: var(--violet-tint); }
+.stat-emergencies .stat-icon{ background: var(--amber-tint); }
+
+.stat-value{
+  font-size: 24px;
+  font-weight: 700;
+  line-height:1.15;
+}
+.stat-label{
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top:2px;
+}
+
+/* ============ SPLIT ROW (form + inventory) ============ */
+.split-row{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 20px;
+  align-items:start;
+}
+.split-row-single{
+  grid-template-columns: 1fr;
+  max-width: 560px;
+}
+
+/* ============ PANELS ============ */
+.panel{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 24px 24px;
+  box-shadow: var(--shadow-sm);
+}
+.panel-wide{ margin-bottom: 20px; }
+
+.panel-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.panel-header h2{
+  font-size: 16.5px;
+  font-weight:700;
+}
+.panel-icon{ font-size:18px; }
+.panel-subtitle{
+  font-size:12.5px;
+  color: var(--ink-faint);
+  margin-left:auto;
+}
+
+/* ============ FORM ============ */
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:16px;
+}
+.form-field label{
+  font-size:12.5px;
+  font-weight:600;
+  color: var(--ink-soft);
+}
+.form-field input,
+.form-field select{
+  border: 1px solid var(--line);
+  background: #FBFCFE;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--ink);
+}
+.form-field input:focus,
+.form-field select:focus{
+  outline: 2px solid var(--blue);
+  outline-offset: 1px;
+  border-color: var(--blue);
+  background: #fff;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.form-error{
+  color: var(--red-dark);
+  font-size: 12.5px;
+  min-height: 16px;
+  margin: -6px 0 12px;
+}
+
+/* ============ BUTTONS ============ */
+.btn{
+  border:none;
+  border-radius: var(--radius-sm);
+  font-weight:700;
+  font-size: 14px;
+  padding: 11px 18px;
+  cursor:pointer;
+  transition: transform .08s ease, box-shadow .15s ease, background .15s ease;
+}
+.btn:active{ transform: translateY(1px); }
+.btn:focus-visible{ outline:2px solid var(--blue); outline-offset:2px; }
+
+.btn-primary{
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(239,75,93,0.28);
+}
+.btn-primary:hover{ background: var(--red-dark); }
+.btn-primary:disabled{ opacity:.6; cursor: not-allowed; box-shadow:none; }
+
+.btn-outline{
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-outline:hover{ border-color: var(--ink-faint); }
+
+.btn-block{ width:100%; }
+.btn-large{ padding: 13px 26px; font-size: 14.5px; }
+
+.panel-actions{
+  display:flex;
+  justify-content:center;
+  margin-top: 18px;
+}
+
+/* ============ INVENTORY CHECK (after submit) ============ */
+.inventory-check{
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+  font-size: 13.5px;
+}
+.inventory-check-row{
+  display:flex;
+  justify-content:space-between;
+  padding: 4px 0;
+  color: var(--ink-soft);
+}
+.inventory-check-row strong{ color: var(--ink); }
+.inventory-check-status{
+  margin-top:10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight:600;
+}
+.inventory-check-status.ok{
+  background: var(--teal-tint);
+  color: #0E8074;
+}
+.inventory-check-status.short{
+  background: var(--amber-tint);
+  color: #92610B;
+}
+
+/* ============ DONOR TABLE ============ */
+.table-wrap{ overflow-x:auto; }
+.donor-table{
+  width:100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 640px;
+}
+.donor-table thead th{
+  text-align:left;
+  padding: 10px 12px;
+  font-size: 11.5px;
+  letter-spacing:.3px;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--line);
+}
+.donor-table tbody td{
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.donor-table tbody tr:hover{ background: #FBFCFE; }
+
+.rank-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-weight:700;
+  font-size: 12px;
+}
+.rank-badge.top{ background: var(--red); color:#fff; }
+
+.donor-name{ font-weight:700; }
+.donor-id{ font-size:12px; color: var(--ink-faint); margin-left:4px; }
+
+.chip{
+  display:inline-flex;
+  align-items:center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight:700;
+}
+.chip-group{ background: var(--red-tint); color: var(--red-dark); }
+
+.compat{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:12.5px;
+  font-weight:600;
+}
+.compat.full{ color:#0E8074; }
+.compat.full::before{ content:"●"; color: var(--teal); font-size:9px; }
+.compat.partial{ color:#92610B; }
+.compat.partial::before{ content:"●"; color: var(--amber); font-size:9px; }
+
+.score-value{ font-weight:700; color: var(--ink); }
+.score-track{
+  width:70px;
+  height:6px;
+  border-radius:999px;
+  background: var(--bg);
+  border:1px solid var(--line);
+  margin-top:4px;
+  overflow:hidden;
+}
+.score-fill{
+  height:100%;
+  background: linear-gradient(90deg, var(--blue), var(--violet));
+}
+
+.avail-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 3px 10px;
+  border-radius:999px;
+  font-size:11.5px;
+  font-weight:700;
+}
+.avail-chip.available{ background: var(--teal-tint); color:#0E8074; }
+.avail-chip.unavailable{ background: #F1F2F5; color: var(--ink-faint); }
+.avail-chip::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+.table-empty{
+  display:none;
+  text-align:center;
+  padding: 40px 20px;
+  color: var(--ink-faint);
+  font-size: 13.5px;
+}
+.table-empty.visible{ display:block; }
+.donor-table.hidden{ display:none; }
+
+/* ============ TOAST ============ */
+.toast{
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  box-shadow: var(--shadow-md);
+  opacity:0;
+  transform: translateY(8px);
+  pointer-events:none;
+  transition: opacity .25s ease, transform .25s ease;
+  z-index: 40;
+  max-width: 320px;
+}
+.toast.show{ opacity:1; transform: translateY(0); }
+.toast.error{ background: var(--red-dark); }
+.toast.success{ background: #0E8074; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px){
+  .split-row{ grid-template-columns: 1fr; }
+  .stats-row{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px){
+  .topnav-inner{ flex-wrap:wrap; gap:12px; }
+  .topnav-status{ order:3; width:100%; }
+  .form-grid{ grid-template-columns: 1fr; }
+  .hero h1{ font-size: 23px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .btn, .toast, .nav-link{ transition:none; }
+}
+
+
+/* Registered Donors visibility fix */
+
+#registeredDonorTableBody tr {
+    display: table-row;
+}
+
+#registeredDonorTableBody td {
+    display: table-cell;
+    padding: 12px 14px;
+    color: var(--ink);
+    background: #fff;
+}
+
+#registeredDonorTableBody td:first-child {
+    font-weight: 700;
+}
+
+#registeredDonorTableBody .avail-chip {
+    display: inline-block;
+}
+
+.registered-donors-card {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #fff;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.registered-donors-card .table-wrap {
+    display: block !important;
+    visibility: visible !important;
+    overflow-x: auto;
+}
+
+.registered-donors-card table {
+    display: table !important;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.registered-donors-card thead {
+    display: table-header-group !important;
+}
+
+.registered-donors-card tbody {
+    display: table-row-group !important;
+}
+
+.registered-donors-card tr {
+    display: table-row !important;
+}
+
+.registered-donors-card th,
+.registered-donors-card td {
+    display: table-cell !important;
+    padding: 12px;
+    text-align: left;
+}
+
+.delete-donor-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.delete-donor-btn:hover {
+    background: #fee2e2;
+}
+
+.emergency-requests-card {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #fff;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.emergency-requests-card .table-wrap {
+    display: block !important;
+    visibility: visible !important;
+    overflow-x: auto;
+}
+
+.emergency-requests-card table {
+    display: table !important;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.emergency-requests-card thead {
+    display: table-header-group !important;
+}
+
+.emergency-requests-card tbody {
+    display: table-row-group !important;
+}
+
+.emergency-requests-card tr {
+    display: table-row !important;
+}
+
+.emergency-requests-card th,
+.emergency-requests-card td {
+    display: table-cell !important;
+    padding: 12px;
+    text-align: left;
+}
+
+.urgency-chip {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.urgency-chip.critical {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.urgency-chip.high {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.urgency-chip.medium {
+    background: #fef3c7;
+    color: #a16207;
+}
+
+.urgency-chip.low {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* ============================================================
+   MODERN OVERVIEW CARD
+   ============================================================ */
+
+.overview-card {
+    position: relative;
+    overflow: hidden;
+    margin-top: 24px;
+    padding: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+    border: 1px solid #f2dfe4;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(30, 41, 59, 0.06);
+}
+
+.overview-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 285px;
+    padding: 38px 42px;
+}
+
+.overview-main {
+    max-width: 650px;
+    position: relative;
+    z-index: 2;
+}
+
+.overview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    margin-bottom: 16px;
+    border-radius: 999px;
+    background: #fff0f3;
+    color: #d93656;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+}
+
+.overview-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #16b981;
+    box-shadow: 0 0 0 4px #dcfce7;
+}
+
+.overview-main h2 {
+    margin: 0 0 14px;
+    color: #172033;
+    font-size: 32px;
+    line-height: 1.15;
+}
+
+.overview-main h2 span {
+    color: #e83e62;
+}
+
+.overview-main p {
+    max-width: 570px;
+    margin: 0 0 24px;
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.overview-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.overview-primary,
+.overview-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.overview-primary {
+    border: none;
+    background: #172033;
+    color: #ffffff;
+}
+
+.overview-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(23, 32, 51, 0.16);
+}
+
+.overview-secondary {
+    border: 1px solid #f0cbd2;
+    background: #ffffff;
+    color: #d93656;
+}
+
+.overview-secondary:hover {
+    background: #fff0f3;
+    transform: translateY(-2px);
+}
+
+.overview-visual {
+    position: relative;
+    width: 270px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blood-drop-large {
+    font-size: 105px;
+    filter: drop-shadow(0 15px 20px rgba(232, 62, 98, 0.18));
+    animation: bloodPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes bloodPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+    }
+}
+
+.floating-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 13px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #f1e3e6;
+    border-radius: 12px;
+    box-shadow: 0 8px 22px rgba(30, 41, 59, 0.09);
+}
+
+.floating-card span {
+    font-size: 20px;
+}
+
+.floating-card strong,
+.floating-card small {
+    display: block;
+}
+
+.floating-card strong {
+    color: #172033;
+    font-size: 11px;
+}
+
+.floating-card small {
+    margin-top: 2px;
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+.floating-card-top {
+    top: 12px;
+    right: 0;
+}
+
+.floating-card-bottom {
+    bottom: 0;
+    left: 0;
+}
+
+
+
+
+/* Responsive */
+@media (max-width: 800px) {
+
+    .overview-content {
+        padding: 28px;
+    }
+
+    .overview-visual {
+        display: none;
+    }
+
+    .overview-main {
+        max-width: 100%;
+    }
+
+    .overview-main h2 {
+        font-size: 27px;
+    }
+
+}
+
+
+/* =========================================================
+   BLOODLINK — INVENTORY DASHBOARD REDESIGN
+   CSS ONLY — NO HTML / JS CHANGES NEEDED
+   ========================================================= */
+
+/* ---------- Inventory page background ---------- */
+
+#inventorySection {
+    position: relative;
+}
+
+#inventorySection .page {
+    position: relative;
+}
+
+
+/* ---------- Inventory hero ---------- */
+
+#inventorySection .hero {
+    position: relative;
+    margin-bottom: 24px;
+    padding: 30px 34px;
+    border-radius: 18px;
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 92% 20%, rgba(232, 62, 98, 0.10), transparent 28%),
+        radial-gradient(circle at 75% 100%, rgba(6, 182, 212, 0.07), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+
+    border: 1px solid #f2dfe4;
+    box-shadow: 0 8px 25px rgba(30, 41, 59, 0.05);
+}
+
+/* Decorative background circle */
+
+#inventorySection .hero::after {
+    content: "🩸";
+    position: absolute;
+    right: 45px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 72px;
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+#inventorySection .hero h1 {
+    position: relative;
+    z-index: 2;
+
+    margin: 0 0 8px;
+    color: #172033;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+}
+
+#inventorySection .hero p {
+    position: relative;
+    z-index: 2;
+
+    margin: 0;
+    color: #64748b;
+    font-size: 14.5px;
+}
+
+
+/* ---------- Main inventory card ---------- */
+
+#inventorySection .panel-wide {
+    position: relative;
+    overflow: hidden;
+
+    margin-bottom: 30px;
+    padding: 28px 30px 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 72%,
+            #fff8fa 100%
+        );
+
+    border: 1px solid #e8e8ed;
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(30, 41, 59, 0.06),
+        0 2px 6px rgba(30, 41, 59, 0.03);
+}
+
+/* Soft decorative glow */
+
+#inventorySection .panel-wide::before {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    right: -90px;
+    top: -90px;
+
+    background: rgba(232, 62, 98, 0.06);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+#inventorySection .panel-wide::after {
+    content: "";
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    left: -65px;
+    bottom: -65px;
+
+    background: rgba(6, 182, 212, 0.045);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+
+/* ---------- Inventory heading ---------- */
+
+#inventorySection .panel-header {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #f1e7e9;
+}
+
+#inventorySection .panel-header .panel-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #fff0f3;
+    box-shadow: 0 5px 12px rgba(232, 62, 98, 0.08);
+
+    font-size: 20px;
+}
+
+#inventorySection .panel-header h2 {
+    margin: 0;
+
+    color: #172033;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+/* Small LIVE badge */
+
+#inventorySection .panel-header h2::after {
+    content: "LIVE STOCK";
+
+    display: inline-flex;
+    align-items: center;
+
+    margin-left: 12px;
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #ecfdf5;
+    color: #0f9f72;
+
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+    vertical-align: middle;
+}
+
+
+/* ---------- Inventory list ---------- */
+
+#inventorySection .inventory-list {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+
+    margin: 0;
+}
+
+
+/* ---------- Individual blood group row ---------- */
+
+#inventorySection .inventory-row {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 58px 1fr 60px;
+    align-items: center;
+    gap: 15px;
+
+    padding: 12px 14px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border: 1px solid #edf0f4;
+    border-radius: 12px;
+
+    box-shadow: 0 3px 10px rgba(30, 41, 59, 0.035);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background 0.22s ease;
+}
+
+
+/* Hover interaction */
+
+#inventorySection .inventory-row:hover {
+    transform: translateX(5px);
+
+    border-color: #f2cbd4;
+
+    background: linear-gradient(
+        90deg,
+        #fffafb,
+        #ffffff
+    );
+
+    box-shadow:
+        0 8px 20px rgba(232, 62, 98, 0.09),
+        0 2px 5px rgba(30, 41, 59, 0.04);
+}
+
+
+/* ---------- Blood group label ---------- */
+
+#inventorySection .inventory-group {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    font-size: 14px;
+    font-weight: 800;
+    color: #172033;
+}
+
+#inventorySection .inventory-group::before {
+    content: "🩸";
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 9px;
+
+    background: #fff0f3;
+
+    font-size: 13px;
+
+    transition:
+        transform 0.22s ease,
+        background 0.22s ease;
+}
+
+#inventorySection .inventory-row:hover .inventory-group::before {
+    transform: scale(1.12) rotate(-5deg);
+    background: #ffe5eb;
+}
+
+
+/* ---------- Bar background ---------- */
+
+#inventorySection .inventory-bar-track {
+    position: relative;
+
+    height: 12px;
+
+    border: none;
+    border-radius: 999px;
+
+    background: #f1f4f8;
+
+    box-shadow:
+        inset 0 1px 2px rgba(30, 41, 59, 0.05);
+
+    overflow: hidden;
+}
+
+
+/* ---------- Animated bar ---------- */
+
+#inventorySection .inventory-bar-fill {
+    position: relative;
+
+    height: 100%;
+
+    border: none;
+    border-radius: 999px;
+
+    background: linear-gradient(
+        90deg,
+        #e83e62,
+        #f05a78,
+        #ff7c96
+    );
+
+    box-shadow:
+        0 2px 8px rgba(232, 62, 98, 0.20);
+
+    transform-origin: left center;
+
+    animation: inventoryBarEnter 0.8s ease-out both;
+
+    transition:
+        filter 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* Shimmer effect */
+
+#inventorySection .inventory-bar-fill::after {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: -80px;
+
+    width: 70px;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.55),
+        transparent
+    );
+
+    animation: inventoryShimmer 2.8s infinite;
+}
+
+#inventorySection .inventory-row:hover .inventory-bar-fill {
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 3px 12px rgba(232, 62, 98, 0.28);
+}
+
+
+/* ---------- Count ---------- */
+
+#inventorySection .inventory-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 48px;
+    min-height: 32px;
+
+    padding: 4px 8px;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+    border: 1px solid #edf0f4;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    transition:
+        background 0.22s ease,
+        color 0.22s ease,
+        transform 0.22s ease;
+}
+
+#inventorySection .inventory-row:hover .inventory-count {
+    transform: scale(1.06);
+
+    background: #fff0f3;
+    border-color: #f4d3da;
+    color: #d93656;
+}
+
+
+/* ---------- Empty inventory rows ---------- */
+
+/* Empty bars look softer */
+
+#inventorySection .inventory-bar-fill[style*="width: 0"],
+#inventorySection .inventory-bar-fill[style*="width:0"] {
+    background: #dfe5ec;
+    box-shadow: none;
+}
+
+
+/* ---------- Low stock bars ---------- */
+
+#inventorySection .inventory-bar-fill.low {
+    background: linear-gradient(
+        90deg,
+        #d93656,
+        #ef667f
+    );
+}
+
+
+/* ---------- Entrance animation ---------- */
+
+@keyframes inventoryBarEnter {
+    from {
+        transform: scaleX(0);
+        opacity: 0.35;
+    }
+
+    to {
+        transform: scaleX(1);
+        opacity: 1;
+    }
+}
+
+
+/* ---------- Shimmer animation ---------- */
+
+@keyframes inventoryShimmer {
+    0% {
+        left: -80px;
+    }
+
+    55% {
+        left: 110%;
+    }
+
+    100% {
+        left: 110%;
+    }
+}
+
+
+/* ---------- Row entrance ---------- */
+
+#inventorySection .inventory-row {
+    animation: inventoryRowEnter 0.45s ease both;
+}
+
+#inventorySection .inventory-row:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+#inventorySection .inventory-row:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+#inventorySection .inventory-row:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+#inventorySection .inventory-row:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+#inventorySection .inventory-row:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+#inventorySection .inventory-row:nth-child(6) {
+    animation-delay: 0.30s;
+}
+
+#inventorySection .inventory-row:nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+#inventorySection .inventory-row:nth-child(8) {
+    animation-delay: 0.40s;
+}
+
+@keyframes inventoryRowEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 800px) {
+
+    #inventorySection .hero {
+        padding: 26px 24px;
+    }
+
+    #inventorySection .hero h1 {
+        font-size: 27px;
+    }
+
+    #inventorySection .hero::after {
+        right: 20px;
+        font-size: 55px;
+    }
+
+    #inventorySection .panel-wide {
+        padding: 22px 18px;
+    }
+
+    #inventorySection .inventory-row {
+        grid-template-columns: 52px 1fr 50px;
+        gap: 10px;
+        padding: 11px 10px;
+    }
+
+    #inventorySection .inventory-group {
+        font-size: 13px;
+    }
+
+    #inventorySection .inventory-group::before {
+        width: 25px;
+        height: 25px;
+        font-size: 11px;
+    }
+
+    #inventorySection .inventory-count {
+        min-width: 42px;
+        min-height: 29px;
+        font-size: 13px;
+    }
+}
+
+
+/* ---------- Accessibility ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #inventorySection .inventory-row,
+    #inventorySection .inventory-bar-fill {
+        animation: none;
+    }
+
+    #inventorySection .inventory-row,
+    #inventorySection .inventory-count,
+    #inventorySection .inventory-group::before {
+        transition: none;
+    }
+}
+
+/* =========================================================
+   BLOODLINK — EMERGENCY DASHBOARD REDESIGN
+   Same visual theme as INVENTORY
+   CSS ONLY — NO HTML / JS CHANGES NEEDED
+   ========================================================= */
+
+
+/* =========================================================
+   EMERGENCY PAGE BACKGROUND
+   ========================================================= */
+
+#emergencySection {
+    position: relative;
+}
+
+#emergencySection .page {
+    position: relative;
+}
+
+
+/* =========================================================
+   EMERGENCY HERO
+   ========================================================= */
+
+#emergencySection .hero {
+    position: relative;
+    margin-bottom: 24px;
+    padding: 30px 34px;
+    border-radius: 18px;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 92% 20%,
+            rgba(232, 62, 98, 0.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 75% 100%,
+            rgba(6, 182, 212, 0.07),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #fff5f7 100%
+        );
+
+    border: 1px solid #f2dfe4;
+
+    box-shadow:
+        0 8px 25px rgba(30, 41, 59, 0.05);
+}
+
+#emergencySection .hero::after {
+    content: "🚨";
+    position: absolute;
+    right: 45px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    font-size: 68px;
+    opacity: 0.08;
+
+    pointer-events: none;
+}
+
+#emergencySection .hero h1 {
+    position: relative;
+    z-index: 2;
+
+    margin: 0 0 8px;
+
+    color: #172033;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+}
+
+#emergencySection .hero p {
+    position: relative;
+    z-index: 2;
+
+    margin: 0;
+
+    color: #64748b;
+    font-size: 14.5px;
+}
+
+
+/* =========================================================
+   EMERGENCY FORM CONTAINER
+   ========================================================= */
+
+#emergencySection .split-row-single {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+#emergencySection .split-row-single > .panel {
+    position: relative;
+    overflow: hidden;
+
+    width: 760px !important;
+    max-width: 760px !important;
+
+    margin: 0 auto 30px !important;
+    padding: 28px 30px 30px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 72%,
+            #fff8fa 100%
+        );
+
+    border: 1px solid #e8e8ed;
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(30, 41, 59, 0.06),
+        0 2px 6px rgba(30, 41, 59, 0.03);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* Decorative circles */
+
+#emergencySection .split-row-single > .panel::before {
+    content: "";
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    right: -90px;
+    top: -90px;
+
+    background: rgba(232, 62, 98, 0.06);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+#emergencySection .split-row-single > .panel::after {
+    content: "";
+    position: absolute;
+
+    width: 120px;
+    height: 120px;
+
+    left: -65px;
+    bottom: -65px;
+
+    background: rgba(6, 182, 212, 0.045);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   FORM HEADING
+   ========================================================= */
+
+#emergencySection .panel-header {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #f1e7e9;
+}
+
+#emergencySection .panel-header .panel-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #fff0f3;
+
+    box-shadow:
+        0 5px 12px rgba(232, 62, 98, 0.08);
+
+    font-size: 20px;
+}
+
+#emergencySection .panel-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+
+/* Add LIVE EMERGENCY badge */
+
+#emergencySection .panel-header h2::after {
+    content: "LIVE REQUEST";
+
+    display: inline-flex;
+    align-items: center;
+
+    margin-left: 12px;
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #fff0f3;
+    color: #d93656;
+
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   FORM LABELS
+   ========================================================= */
+
+#emergencySection label {
+    color: #52657d;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FORM INPUTS
+   ========================================================= */
+
+#emergencySection input,
+#emergencySection select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    min-height: 46px;
+
+    padding: 11px 13px;
+
+    background: #fbfcfe;
+
+    border: 1px solid #e4e8ee;
+    border-radius: 10px;
+
+    color: #172033;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* Hover */
+
+#emergencySection input:hover,
+#emergencySection select:hover {
+    background: #ffffff;
+
+    border-color: #f2cbd4;
+}
+
+
+/* Focus */
+
+#emergencySection input:focus,
+#emergencySection select:focus {
+    background: #ffffff;
+
+    border-color: #e83e62;
+
+    box-shadow:
+        0 0 0 3px rgba(232, 62, 98, 0.10);
+
+    transform: translateY(-1px);
+}
+
+
+/* Placeholder */
+
+#emergencySection input::placeholder {
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   CREATE REQUEST BUTTON
+   ========================================================= */
+
+#emergencySection #createRequestBtn {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 47px;
+
+    margin-top: 8px;
+
+    border: none;
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e83e62,
+            #f04f6c
+        );
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 16px rgba(232, 62, 98, 0.20);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+#emergencySection #createRequestBtn:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.03);
+
+    box-shadow:
+        0 10px 22px rgba(232, 62, 98, 0.28);
+}
+
+#emergencySection #createRequestBtn:active {
+    transform: translateY(0);
+}
+
+#emergencySection #createRequestBtn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* =========================================================
+   INVENTORY CHECK BOX
+   ========================================================= */
+
+#emergencySection #inventoryCheck {
+    position: relative;
+    z-index: 2;
+
+    margin-top: 18px;
+
+    padding: 13px 15px;
+
+    background: #f8fafc;
+
+    border: 1px solid #edf0f4;
+    border-radius: 11px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#emergencySection #inventoryCheck:hover {
+    background: #ffffff;
+
+    border-color: #f2d3da;
+
+    box-shadow:
+        0 5px 14px rgba(30, 41, 59, 0.04);
+}
+
+
+/* =========================================================
+   FORM ERROR
+   ========================================================= */
+
+#emergencySection #emergencyFormError {
+    margin-top: 10px;
+
+    color: #d93656;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   EMERGENCY REQUESTS CARD
+   ========================================================= */
+
+#emergencySection .emergency-requests-card {
+    position: relative;
+    overflow: hidden;
+
+    width: calc(100% - 56px);
+    max-width: 1150px;
+
+    margin: 28px auto 30px !important;
+
+    padding: 28px 30px 30px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 72%,
+            #fff8fa 100%
+        );
+
+    border: 1px solid #e8e8ed;
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(30, 41, 59, 0.06),
+        0 2px 6px rgba(30, 41, 59, 0.03);
+}
+
+
+/* Decorative circle */
+
+#emergencySection .emergency-requests-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    right: -90px;
+    top: -90px;
+
+    background: rgba(232, 62, 98, 0.06);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   REQUEST CARD HEADING
+   ========================================================= */
+
+#emergencySection .emergency-requests-card .section-heading {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 22px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #f1e7e9;
+}
+
+#emergencySection .emergency-requests-card .section-heading h2 {
+    margin: 0 0 7px;
+
+    color: #172033;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+#emergencySection .emergency-requests-card .section-heading p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13.5px;
+}
+
+
+/* =========================================================
+   REQUEST TABLE
+   ========================================================= */
+
+#emergencySection .emergency-request-table {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 13.5px;
+}
+
+#emergencySection .emergency-request-table th {
+    padding: 13px 12px;
+
+    color: #8a99ad;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e9edf2;
+}
+
+#emergencySection .emergency-request-table td {
+    padding: 15px 12px;
+
+    color: #172033;
+
+    border-bottom: 1px solid #edf0f4;
+
+    transition:
+        background 0.2s ease;
+}
+
+
+/* =========================================================
+   REQUEST ROW HOVER
+   ========================================================= */
+
+#emergencySection .emergency-request-table tbody tr {
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+#emergencySection .emergency-request-table tbody tr:hover {
+    background:
+        linear-gradient(
+            90deg,
+            #fffafb,
+            #ffffff
+        );
+
+    transform: translateX(3px);
+}
+
+#emergencySection .emergency-request-table tbody tr:hover td {
+    border-bottom-color: #f2d3da;
+}
+
+
+/* =========================================================
+   BLOOD GROUP CHIP
+   ========================================================= */
+
+#emergencySection .chip-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 38px;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #fff0f3;
+
+    color: #d93656;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   URGENCY CHIPS
+   ========================================================= */
+
+#emergencySection .urgency-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.2px;
+}
+
+#emergencySection .urgency-chip.critical {
+    background: #ffe4e8;
+    color: #d93656;
+}
+
+#emergencySection .urgency-chip.high {
+    background: #fff0dc;
+    color: #c97900;
+}
+
+#emergencySection .urgency-chip.medium {
+    background: #fff4c7;
+    color: #a56b00;
+}
+
+#emergencySection .urgency-chip.low {
+    background: #e9f7ef;
+    color: #198754;
+}
+
+
+/* =========================================================
+   ACTIVE STATUS CHIP
+   ========================================================= */
+
+#emergencySection .avail-chip.available {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: #e7f8f5;
+
+    color: #138a78;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+#emergencySection .avail-chip.available::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #18b6a0;
+
+    box-shadow:
+        0 0 0 3px rgba(24, 182, 160, 0.10);
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+   ========================================================= */
+
+#emergencySection .delete-donor-btn {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    opacity: 0.65;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+#emergencySection .delete-donor-btn:hover {
+    background: #fff0f3;
+
+    border-color: #f3d0d8;
+
+    opacity: 1;
+
+    transform: scale(1.08);
+}
+
+
+/* =========================================================
+   EMPTY REQUEST STATE
+   ========================================================= */
+
+#emergencySection #requestTableEmpty {
+    padding: 28px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   TABLE SCROLLING
+   ========================================================= */
+
+#emergencySection .emergency-requests-card .table-wrap {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   ROW ENTRANCE ANIMATION
+   ========================================================= */
+
+#emergencySection .emergency-request-table tbody tr {
+    animation: emergencyRowEnter 0.45s ease both;
+}
+
+#emergencySection .emergency-request-table tbody tr:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+#emergencySection .emergency-request-table tbody tr:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+#emergencySection .emergency-request-table tbody tr:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+#emergencySection .emergency-request-table tbody tr:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+#emergencySection .emergency-request-table tbody tr:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+@keyframes emergencyRowEnter {
+    from {
+        opacity: 0;
+        transform: translateY(7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE / RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    #emergencySection .hero {
+        padding: 26px 24px;
+    }
+
+    #emergencySection .hero h1 {
+        font-size: 27px;
+    }
+
+    #emergencySection .hero::after {
+        right: 20px;
+        font-size: 55px;
+    }
+
+    #emergencySection .split-row-single > .panel {
+        width: calc(100% - 30px) !important;
+        max-width: calc(100% - 30px) !important;
+
+        padding: 22px 18px 24px !important;
+    }
+
+    #emergencySection .emergency-requests-card {
+        width: calc(100% - 30px);
+
+        padding: 22px 18px 24px !important;
+    }
+
+    #emergencySection .panel-header h2::after {
+        margin-left: 7px;
+    }
+
+    #emergencySection .emergency-request-table {
+        min-width: 850px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #emergencySection .emergency-request-table tbody tr,
+    #emergencySection input,
+    #emergencySection select,
+    #emergencySection #createRequestBtn,
+    #emergencySection .delete-donor-btn {
+        animation: none;
+        transition: none;
+    }
+}
+
+/* =========================================================
+   BLOODLINK — DASHBOARD TOP SECTION
+   Styles ONLY the area above the Overview
+   ========================================================= */
+
+
+/* =========================================================
+   DASHBOARD HERO / TITLE
+   ========================================================= */
+
+#dashboardSection .hero {
+    position: relative;
+    margin-bottom: 24px;
+    padding: 30px 34px;
+
+    border-radius: 18px;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 92% 20%,
+            rgba(232, 62, 98, 0.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 75% 100%,
+            rgba(6, 182, 212, 0.07),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #fff5f7 100%
+        );
+
+    border: 1px solid #f2dfe4;
+
+    box-shadow:
+        0 8px 25px rgba(30, 41, 59, 0.05);
+
+    transition:
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* Decorative blood drop */
+
+#dashboardSection .hero::after {
+    content: "🩸";
+
+    position: absolute;
+    right: 45px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    font-size: 65px;
+    opacity: 0.07;
+
+    pointer-events: none;
+}
+
+
+/* Main heading */
+
+#dashboardSection .hero h1 {
+    position: relative;
+    z-index: 2;
+
+    margin: 0 0 8px;
+
+    color: #172033;
+
+    font-size: 32px;
+    font-weight: 800;
+
+    letter-spacing: -0.6px;
+}
+
+
+/* Subtitle */
+
+#dashboardSection .hero p {
+    position: relative;
+    z-index: 2;
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14.5px;
+}
+
+
+/* =========================================================
+   DASHBOARD STAT CARDS
+   ========================================================= */
+
+#dashboardSection .stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-bottom: 24px;
+}
+
+
+/* Individual card */
+
+#dashboardSection .stat-card {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 88px;
+
+    padding: 18px 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 72%,
+            #fff8fa 100%
+        );
+
+    border: 1px solid #e8e8ed;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 8px 22px rgba(30, 41, 59, 0.05),
+        0 2px 5px rgba(30, 41, 59, 0.025);
+
+    overflow: hidden;
+
+    cursor: default;
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease;
+}
+
+
+/* Decorative corner */
+
+#dashboardSection .stat-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -50px;
+    top: -50px;
+
+    border-radius: 50%;
+
+    background: rgba(232, 62, 98, 0.045);
+
+    pointer-events: none;
+}
+
+
+/* Hover */
+
+#dashboardSection .stat-card:hover {
+    transform: translateY(-4px);
+
+    border-color: #f2cbd4;
+
+    box-shadow:
+        0 12px 28px rgba(232, 62, 98, 0.09),
+        0 3px 7px rgba(30, 41, 59, 0.04);
+}
+
+
+/* =========================================================
+   STAT CARD ICON
+   ========================================================= */
+
+#dashboardSection .stat-card .stat-icon {
+    width: 46px;
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 14px;
+
+    border-radius: 13px;
+
+    font-size: 21px;
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+
+/* Blood */
+
+#dashboardSection .stat-card:nth-child(1) .stat-icon {
+    background: #fff0f3;
+
+    box-shadow:
+        0 5px 12px rgba(232, 62, 98, 0.08);
+}
+
+
+/* Donors */
+
+#dashboardSection .stat-card:nth-child(2) .stat-icon {
+    background: #f1ecff;
+
+    box-shadow:
+        0 5px 12px rgba(99, 70, 180, 0.08);
+}
+
+
+/* Emergencies */
+
+#dashboardSection .stat-card:nth-child(3) .stat-icon {
+    background: #fff4df;
+
+    box-shadow:
+        0 5px 12px rgba(217, 140, 30, 0.08);
+}
+
+
+/* Icon hover */
+
+#dashboardSection .stat-card:hover .stat-icon {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+
+/* =========================================================
+   STAT TEXT
+   ========================================================= */
+
+#dashboardSection .stat-card .stat-value {
+    position: relative;
+    z-index: 2;
+
+    margin: 0 0 3px;
+
+    color: #172033;
+
+    font-size: 24px;
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+
+#dashboardSection .stat-card .stat-label {
+    position: relative;
+    z-index: 2;
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 12.5px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   SMALL LIVE INDICATOR
+   ========================================================= */
+
+#dashboardSection .stats-grid::before {
+    content: "LIVE DASHBOARD";
+
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    #dashboardSection .hero {
+        padding: 26px 24px;
+    }
+
+    #dashboardSection .hero h1 {
+        font-size: 27px;
+    }
+
+    #dashboardSection .hero::after {
+        right: 20px;
+        font-size: 52px;
+    }
+
+    #dashboardSection .stats-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+    #dashboardSection .stat-card {
+        min-height: 78px;
+
+        padding: 15px 17px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #dashboardSection .hero,
+    #dashboardSection .stat-card,
+    #dashboardSection .stat-icon {
+        transition: none;
+    }
+
+    #dashboardSection .stat-card:hover {
+        transform: none;
+    }
+
+    #dashboardSection .stat-card:hover .stat-icon {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   BLOODLINK — DONORS DASHBOARD REDESIGN
+   Same theme as INVENTORY + EMERGENCY
+   CSS ONLY — NO HTML / JS CHANGES
+   ========================================================= */
+
+
+/* =========================================================
+   DONORS PAGE
+   ========================================================= */
+
+#donorsSection {
+    position: relative;
+}
+
+#donorsSection .page {
+    position: relative;
+}
+
+
+/* =========================================================
+   DONOR REGISTRATION CARD
+   ========================================================= */
+
+#donorsSection .donor-registration-card {
+    position: relative;
+    overflow: hidden;
+
+    width: calc(100% - 56px);
+    max-width: 1150px;
+
+    margin: 28px auto 24px !important;
+    padding: 28px 30px 30px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 72%,
+            #fff8fa 100%
+        );
+
+    border: 1px solid #e8e8ed;
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(30, 41, 59, 0.06),
+        0 2px 6px rgba(30, 41, 59, 0.03);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* Decorative circle */
+
+#donorsSection .donor-registration-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    right: -90px;
+    top: -90px;
+
+    background: rgba(232, 62, 98, 0.06);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+#donorsSection .donor-registration-card::after {
+    content: "🩸";
+
+    position: absolute;
+
+    right: 38px;
+    top: 28px;
+
+    font-size: 55px;
+
+    opacity: 0.07;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   DONOR REGISTRATION HEADING
+   ========================================================= */
+
+#donorsSection .donor-registration-card .section-heading {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 24px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #f1e7e9;
+}
+
+#donorsSection .donor-registration-card .section-heading h2 {
+    margin: 0 0 7px;
+
+    color: #172033;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+#donorsSection .donor-registration-card .section-heading p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13.5px;
+}
+
+
+/* =========================================================
+   DONOR FORM
+   ========================================================= */
+
+#donorsSection #donorForm {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* Form grid */
+
+#donorsSection #donorForm .form-grid {
+    gap: 17px 16px;
+}
+
+
+/* Labels */
+
+#donorsSection #donorForm label {
+    color: #52657d;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* Inputs + Select */
+
+#donorsSection #donorForm input,
+#donorsSection #donorForm select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    min-height: 46px;
+
+    padding: 11px 13px;
+
+    background: #fbfcfe;
+
+    border: 1px solid #e4e8ee;
+
+    border-radius: 10px;
+
+    color: #172033;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* Hover */
+
+#donorsSection #donorForm input:hover,
+#donorsSection #donorForm select:hover {
+    background: #ffffff;
+
+    border-color: #f2cbd4;
+}
+
+
+/* Focus */
+
+#donorsSection #donorForm input:focus,
+#donorsSection #donorForm select:focus {
+    background: #ffffff;
+
+    border-color: #e83e62;
+
+    box-shadow:
+        0 0 0 3px rgba(232, 62, 98, 0.10);
+
+    transform: translateY(-1px);
+}
+
+
+/* Placeholder */
+
+#donorsSection #donorForm input::placeholder {
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   REGISTER DONOR BUTTON
+   ========================================================= */
+
+#donorsSection #registerDonorBtn {
+    position: relative;
+    z-index: 2;
+
+    min-height: 46px;
+
+    margin-top: 20px;
+
+    padding: 0 22px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e83e62,
+            #f04f6c
+        );
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 16px rgba(232, 62, 98, 0.20);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+#donorsSection #registerDonorBtn:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.03);
+
+    box-shadow:
+        0 10px 22px rgba(232, 62, 98, 0.28);
+}
+
+#donorsSection #registerDonorBtn:active {
+    transform: translateY(0);
+}
+
+#donorsSection #registerDonorBtn:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   FORM ERROR
+   ========================================================= */
+
+#donorsSection #donorFormError {
+    margin-top: 10px;
+
+    color: #d93656;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   REGISTERED DONORS CARD
+   ========================================================= */
+
+#donorsSection .registered-donors-card {
+    position: relative;
+    overflow: hidden;
+
+    width: calc(100% - 56px);
+    max-width: 1150px;
+
+    margin: 24px auto 30px !important;
+
+    padding: 28px 30px 30px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 72%,
+            #fff8fa 100%
+        );
+
+    border: 1px solid #e8e8ed;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(30, 41, 59, 0.06),
+        0 2px 6px rgba(30, 41, 59, 0.03);
+}
+
+
+/* Decorative circle */
+
+#donorsSection .registered-donors-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 160px;
+    height: 160px;
+
+    left: -80px;
+    bottom: -80px;
+
+    background: rgba(6, 182, 212, 0.045);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   REGISTERED DONORS HEADING
+   ========================================================= */
+
+#donorsSection .registered-donors-card .section-heading {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 20px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #f1e7e9;
+}
+
+#donorsSection .registered-donors-card .section-heading h2 {
+    margin: 0 0 7px;
+
+    color: #172033;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+#donorsSection .registered-donors-card .section-heading p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13.5px;
+}
+
+
+/* =========================================================
+   REGISTERED DONOR TABLE
+   ========================================================= */
+
+#donorsSection .registered-donors-card .donor-table {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 13.5px;
+}
+
+#donorsSection .registered-donors-card .donor-table th {
+    padding: 13px 12px;
+
+    color: #8a99ad;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e9edf2;
+}
+
+#donorsSection .registered-donors-card .donor-table td {
+    padding: 15px 12px;
+
+    color: #172033;
+
+    border-bottom: 1px solid #edf0f4;
+
+    transition:
+        background 0.2s ease;
+}
+
+
+/* Row hover */
+
+#donorsSection .registered-donors-card .donor-table tbody tr {
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+#donorsSection .registered-donors-card .donor-table tbody tr:hover {
+    background:
+        linear-gradient(
+            90deg,
+            #fffafb,
+            #ffffff
+        );
+
+    transform: translateX(3px);
+}
+
+
+/* =========================================================
+   BLOOD GROUP CHIP
+   ========================================================= */
+
+#donorsSection .chip-group {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 38px;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #fff0f3;
+
+    color: #d93656;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   AVAILABILITY CHIP
+   ========================================================= */
+
+#donorsSection .avail-chip.available {
+    display: inline-flex;
+
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: #e7f8f5;
+
+    color: #138a78;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+#donorsSection .avail-chip.available::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #18b6a0;
+
+    box-shadow:
+        0 0 0 3px rgba(24, 182, 160, 0.10);
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+   ========================================================= */
+
+#donorsSection .delete-donor-btn {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid transparent;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    opacity: 0.65;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+#donorsSection .delete-donor-btn:hover {
+    background: #fff0f3;
+
+    border-color: #f3d0d8;
+
+    opacity: 1;
+
+    transform: scale(1.08);
+}
+
+
+/* =========================================================
+   PRIORITY DONORS SECTION
+   ========================================================= */
+
+#donorsSection .page:last-child {
+    position: relative;
+
+    padding-top: 10px;
+}
+
+
+/* Priority hero */
+
+#donorsSection .page:last-child .hero {
+    position: relative;
+
+    margin-bottom: 24px;
+
+    padding: 30px 34px;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 92% 20%,
+            rgba(232, 62, 98, 0.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 75% 100%,
+            rgba(6, 182, 212, 0.07),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #fff5f7 100%
+        );
+
+    border: 1px solid #f2dfe4;
+
+    box-shadow:
+        0 8px 25px rgba(30, 41, 59, 0.05);
+}
+
+
+/* Priority hero icon */
+
+#donorsSection .page:last-child .hero::after {
+    content: "👥";
+
+    position: absolute;
+
+    right: 45px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    font-size: 68px;
+
+    opacity: 0.07;
+
+    pointer-events: none;
+}
+
+#donorsSection .page:last-child .hero h1 {
+    position: relative;
+    z-index: 2;
+
+    margin: 0 0 8px;
+
+    color: #172033;
+
+    font-size: 32px;
+    font-weight: 800;
+
+    letter-spacing: -0.6px;
+}
+
+#donorsSection .page:last-child .hero p {
+    position: relative;
+    z-index: 2;
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14.5px;
+}
+
+
+/* =========================================================
+   PRIORITY DONORS PANEL
+   ========================================================= */
+
+#donorsSection .page:last-child .panel-wide {
+    position: relative;
+
+    overflow: hidden;
+
+    margin-bottom: 30px;
+
+    padding: 28px 30px 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #ffffff 72%,
+            #fff8fa 100%
+        );
+
+    border: 1px solid #e8e8ed;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(30, 41, 59, 0.06),
+        0 2px 6px rgba(30, 41, 59, 0.03);
+}
+
+
+/* Decorative circle */
+
+#donorsSection .page:last-child .panel-wide::before {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    right: -90px;
+    top: -90px;
+
+    background: rgba(232, 62, 98, 0.06);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   PRIORITY PANEL HEADER
+   ========================================================= */
+
+#donorsSection .page:last-child .panel-header {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-bottom: 22px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #f1e7e9;
+}
+
+#donorsSection .page:last-child .panel-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f1ecff;
+
+    box-shadow:
+        0 5px 12px rgba(99, 70, 180, 0.08);
+
+    font-size: 20px;
+}
+
+#donorsSection .page:last-child .panel-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+
+/* Live matching badge */
+
+#donorsSection .page:last-child .panel-header h2::after {
+    content: "SMART MATCHING";
+
+    display: inline-flex;
+
+    align-items: center;
+
+    margin-left: 12px;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #f1ecff;
+
+    color: #6746b8;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.7px;
+
+    vertical-align: middle;
+}
+
+
+/* Subtitle */
+
+#donorsSection #matchSubtitle {
+    margin-left: auto;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   PRIORITY DONOR TABLE
+   ========================================================= */
+
+#donorsSection .priority-donor-table {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 13.5px;
+}
+
+#donorsSection .priority-donor-table th {
+    padding: 13px 12px;
+
+    color: #8a99ad;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e9edf2;
+}
+
+#donorsSection .priority-donor-table td {
+    padding: 15px 12px;
+
+    color: #172033;
+
+    border-bottom: 1px solid #edf0f4;
+}
+
+
+/* Priority row hover */
+
+#donorsSection .priority-donor-table tbody tr {
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+#donorsSection .priority-donor-table tbody tr:hover {
+    background:
+        linear-gradient(
+            90deg,
+            #fffafb,
+            #ffffff
+        );
+
+    transform: translateX(3px);
+}
+
+
+/* =========================================================
+   FIND BEST DONORS BUTTON
+   ========================================================= */
+
+#donorsSection #findDonorsBtn {
+    min-height: 46px;
+
+    padding: 0 24px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e83e62,
+            #f04f6c
+        );
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 16px rgba(232, 62, 98, 0.20);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+#donorsSection #findDonorsBtn:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.03);
+
+    box-shadow:
+        0 10px 22px rgba(232, 62, 98, 0.28);
+}
+
+#donorsSection #findDonorsBtn:active {
+    transform: translateY(0);
+}
+
+
+/* Center the button */
+
+#donorsSection .panel-actions {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+
+#donorsSection .table-empty {
+    position: relative;
+    z-index: 2;
+
+    padding: 30px 20px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    #donorsSection .donor-registration-card,
+    #donorsSection .registered-donors-card {
+        width: calc(100% - 30px);
+
+        padding: 22px 18px 24px !important;
+    }
+
+    #donorsSection .donor-registration-card::after {
+        right: 20px;
+
+        font-size: 45px;
+    }
+
+    #donorsSection .page:last-child .hero {
+        padding: 26px 24px;
+    }
+
+    #donorsSection .page:last-child .hero h1 {
+        font-size: 27px;
+    }
+
+    #donorsSection .page:last-child .hero::after {
+        right: 20px;
+
+        font-size: 52px;
+    }
+
+    #donorsSection .page:last-child .panel-wide {
+        padding: 22px 18px 24px;
+    }
+
+    #donorsSection .page:last-child .panel-header {
+        flex-wrap: wrap;
+    }
+
+    #donorsSection #matchSubtitle {
+        width: 100%;
+
+        margin-left: 0;
+
+        text-align: left;
+    }
+
+    #donorsSection .donor-table {
+        min-width: 760px;
+    }
+
+    #donorsSection .priority-donor-table {
+        min-width: 850px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #donorsSection .donor-registration-card,
+    #donorsSection .registered-donors-card,
+    #donorsSection .page:last-child .panel-wide,
+    #donorsSection input,
+    #donorsSection select,
+    #donorsSection button,
+    #donorsSection table tbody tr {
+        transition: none;
+        animation: none;
+    }
+
+    #donorsSection table tbody tr:hover,
+    #donorsSection button:hover {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   EMERGENCY → PRIORITY DONORS BUTTON
+   SOFT BLOODLINK THEME
+   ========================================================= */
+
+.find-priority-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    margin-top: 12px;
+    padding: 10px 16px;
+
+    border: 1px solid #f0cbd2;
+    border-radius: 9px;
+
+    background: #fff7f8;
+
+    color: #c83b55;
+
+    font-size: 12px;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    box-shadow: 0 3px 10px rgba(30, 41, 59, 0.06);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.find-priority-btn::before {
+    content: "👥";
+    font-size: 13px;
+}
+
+.find-priority-btn:hover {
+    background: #fff0f3;
+    border-color: #e8aeb9;
+    color: #b8324b;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 14px rgba(30, 41, 59, 0.09);
+}
+
+.find-priority-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 7px rgba(30, 41, 59, 0.06);
+}
