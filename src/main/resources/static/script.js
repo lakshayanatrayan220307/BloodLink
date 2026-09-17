@@ -716,7 +716,7 @@ function initDonorForm() {
 
         try {
             const response = await httpPost(
-                "/api/donors",
+                `${CONFIG.API_BASE_URL}/donors`,
                 donorData
             );
 
