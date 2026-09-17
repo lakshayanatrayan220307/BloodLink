@@ -15,7 +15,7 @@
    1. CONFIG
    ============================================================ */
 const CONFIG = {
-  API_BASE_URL: "/api",
+  API_BASE_URL: "https://bloodlink-backend-9cxg.onrender.com/api",   
   USE_MOCK_DATA: false
 };
 
