@@ -630,7 +630,7 @@ function renderDonorTable(matches, activeRequest) {
 }
 async function loadAllDonors() {
     try {
-        const donors = await httpGet("/api/donors");
+        const donors = await httpGet(`${CONFIG.API_BASE_URL}/donors`);
 
         console.log("Registered donors:", donors);
 
@@ -813,7 +813,7 @@ async function loadAllRequests() {
 
     try {
 
-        const requests = await httpGet("/api/requests");
+        const requests = await httpGet(`${CONFIG.API_BASE_URL}/requests`);
 
         const tbody = document.getElementById("requestTableBody");
         const emptyEl = document.getElementById("requestTableEmpty");
